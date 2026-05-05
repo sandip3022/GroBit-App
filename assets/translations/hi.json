@@ -161,12 +161,10 @@
   "completed_on": "{} को पूरा किया",
   "total": "कुल",
   "streak": "स्ट्रीक",
-  "calculate": "गणना करें",
   "average_completion_rate": "पिछले 30 दिनों में औसत पूर्णता दर {} प्रतिशत है",
   "chart_consistency_trend": "पिछले 30 दिनों में आदतों की निरंतरता दिखाने वाला बार चार्ट",
   "habit_success_status": "{} की सफलता दर {} प्रतिशत है",
-  "free_member": "फ्री सदस्य",
-  "user_profile": "{}, {} प्रोफाइल",
+  "user_profile": "{} प्रोफाइल",
   "onboarding_progress": "{} में से {}",
   "let_get_started": "चलिए शुरू करते हैं",
   "what_should_we_call_you": "हम आपको\nकिस नाम से बुलाएं?",
@@ -182,5 +180,7 @@
   "today": "आज",
   "delete_habit": "आदत हटाएं",
   "log_out": "लॉग आउट",
-  "please_setup_security_first": "इस फीचर का उपयोग करने के लिए कृपया पहले सुरक्षा सेटअप करें।"
+  "please_setup_security_first": "इस फीचर का उपयोग करने के लिए कृपया पहले सुरक्षा सेटअप करें।",
+  "habit_details": "आदत विवरण"
+
 }

@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:habit_tracker_app_2026/core/constants/app_icons.dart';
@@ -11,6 +14,7 @@ class HabitTile extends StatelessWidget {
   final VoidCallback onLongPressBody;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
+  final ConfettiController confettiController;
 
   const HabitTile({
     super.key,
@@ -20,6 +24,7 @@ class HabitTile extends StatelessWidget {
     required this.onLongPressBody,
     required this.onEdit,
     required this.onDelete,
+    required this.confettiController,
   });
 
   @override
@@ -31,129 +36,151 @@ class HabitTile extends StatelessWidget {
 
     final habitColor = Color(habit.colorValue);
 
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      decoration: BoxDecoration(
-        color: colorScheme.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          if (!isDark)
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.05),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: Semantics(
-          hint: "view_habit_history".tr(),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(16),
-            onLongPress: onLongPressBody,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  // --- 1. THEMED ICON BOX ---
-                  _buildIconBox(habitColor),
-
-                  const SizedBox(width: 16),
-
-                  // --- 2. TITLE & STREAK INFO ---
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Title
-                        Text(
-                          habit.title,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18,
-                            decoration: isCompletedToday
-                                ? TextDecoration.lineThrough
-                                : null,
-                            color: isCompletedToday
-                                ? colorScheme.onSurface.withValues(alpha: 0.5)
-                                : colorScheme.onSurface,
-                          ),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        // Streak Badge
-                        if (habit.currentStreak > 0)
-                          Row(
-                            children: [
-                              ExcludeSemantics(
-                                child: Icon(
-                                  Icons.local_fire_department_rounded,
-                                  size: 14,
-                                  color: AppColors.secondary,
-                                ),
-                              ),
-                              const SizedBox(width: 4),
-                              Text(
-                                "habit_streak".tr(
-                                  args: [habit.currentStreak.toString()],
-                                ),
-                                style: textTheme.labelSmall?.copyWith(
-                                  color: AppColors.secondary,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 0.5,
-                                ),
-                              ),
-                            ],
-                          )
-                        else
-                          Text(
-                            "start_your_journey_today".tr(),
-                            style: textTheme.bodySmall?.copyWith(
-                              fontSize: 12,
-                              color: colorScheme.onSurface.withValues(
-                                alpha: 0.6,
+    return Stack(
+      children: [
+         Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+              if (!isDark)
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.05),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: Semantics(
+              hint: "view_habit_history".tr(),
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onLongPress: onLongPressBody,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    children: [
+                      // --- 1. THEMED ICON BOX ---
+                      _buildIconBox(habitColor),
+        
+                      const SizedBox(width: 16),
+        
+                      // --- 2. TITLE & STREAK INFO ---
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Title
+                            Text(
+                              habit.title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                                decoration: isCompletedToday
+                                    ? TextDecoration.lineThrough
+                                    : null,
+                                color: isCompletedToday
+                                    ? colorScheme.onSurface.withValues(alpha: 0.5)
+                                    : colorScheme.onSurface,
                               ),
                             ),
-                          ),
-                      ],
-                    ),
-                  ),
-
-                  // --- 3. CHECK BUTTON ---
-                  Semantics(
-                    button: true,
-                    checked: isCompletedToday,
-                    label: "toggle_completion".tr(args: [habit.title]),
-                    child: GestureDetector(
-                      onTap: onToggle,
-                      behavior: HitTestBehavior.opaque,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: _buildCheckButton(
-                          habitColor,
-                          colorScheme.onSurface,
+        
+                            const SizedBox(height: 6),
+        
+                            // Streak Badge
+                            if (habit.currentStreak > 0)
+                              Row(
+                                children: [
+                                  ExcludeSemantics(
+                                    child: Icon(
+                                      Icons.local_fire_department_rounded,
+                                      size: 14,
+                                      color: AppColors.secondary,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    "habit_streak".tr(
+                                      args: [habit.currentStreak.toString()],
+                                    ),
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: AppColors.secondary,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else
+                              Text(
+                                "start_your_journey_today".tr(),
+                                style: textTheme.bodySmall?.copyWith(
+                                  fontSize: 12,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.6,
+                                  ),
+                                ),
+                              ),
+                          ],
                         ),
                       ),
-                    ),
+        
+                      // --- 3. CHECK BUTTON ---
+                      Semantics(
+                        button: true,
+                        checked: isCompletedToday,
+                        label: "toggle_completion".tr(args: [habit.title]),
+                        child: GestureDetector(
+                          onTap: onToggle,
+                          behavior: HitTestBehavior.opaque,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: _buildCheckButton(
+                              habitColor,
+                              colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ),
+        
+                      const SizedBox(width: 8),
+        
+                      // --- 4. MENU ---
+                      Semantics(
+                        label: "habit_options_menu".tr(),
+                        child: _buildOptionsMenu(context, colorScheme),
+                      ),
+                    ],
                   ),
-
-                  const SizedBox(width: 8),
-
-                  // --- 4. MENU ---
-                  Semantics(
-                    label: "habit_options_menu".tr(),
-                    child: _buildOptionsMenu(context, colorScheme),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
         ),
+            
+         
+        Align(
+        alignment: AlignmentGeometry.topCenter,
+        child: ConfettiWidget(confettiController: confettiController,
+        blastDirection: pi,
+        emissionFrequency: 0.02,
+        numberOfParticles: 20,
+        gravity: 0.4,
+        shouldLoop: false,
+        blastDirectionality: BlastDirectionality.explosive,
+        createParticlePath: (size) => drawStar(size),          
+        ),
       ),
+    
+      ]
+      
+      
+    
     );
   }
 
@@ -236,4 +263,34 @@ class HabitTile extends StatelessWidget {
       ],
     );
   }
+
+ Path drawStar(Size size){
+  final Path path = Path();
+
+  double width = size.width;
+  double halfWidth = width/ 2;
+
+  const int points = 5;
+
+  final double externalRadius = halfWidth;
+  final double internalRadius = halfWidth * 0.45;
+
+  for (int i = 0; i < points*2;i++){
+    final radius = i.isEven ? externalRadius : internalRadius;
+
+    final angle = (pi/points) * i - pi*2;
+
+    final x = halfWidth + radius * cos(angle);
+    final y = halfWidth + radius * sin(angle);
+
+    if (i == 0){
+      path.moveTo(x, y);
+    } else{
+      path.lineTo(x, y);
+    }
+  }
+  path.close();
+
+  return path;
+ }
 }

@@ -34,3 +34,5 @@ android/captures/
 android/gradlew
 android/gradlew.bat
 android/local.properties
+*.jks
+key.properties

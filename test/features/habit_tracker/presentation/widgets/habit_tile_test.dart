@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -30,6 +31,7 @@ void main() {
             body: HabitTile(
               habit: mockHabit,
               isCompletedToday: false,
+              confettiController: ConfettiController(duration: const Duration(seconds: 1)),
               onToggle: () {},
               onLongPressBody: () {},
               onEdit: () {},
@@ -57,6 +59,7 @@ void main() {
             body: HabitTile(
               habit: mockHabit,
               isCompletedToday: false,
+              confettiController: ConfettiController(duration: const Duration(seconds: 1)),
               onToggle: () {},
               onLongPressBody: () {},
               onEdit: () {},
@@ -81,6 +84,9 @@ void main() {
       bool longPressTriggered = false;
       bool editTapped = false;
       bool deleteTapped = false;
+      final confettiController = ConfettiController(
+        duration: const Duration(seconds: 1),
+      );
 
       await tester.pumpWidget(
         MaterialApp(
@@ -88,6 +94,7 @@ void main() {
             body: HabitTile(
               habit: mockHabit,
               isCompletedToday: false,
+              confettiController: confettiController,
               onToggle: () => toggleTapped = true,
               onLongPressBody: () => longPressTriggered = true,
               onEdit: () => editTapped = true,
@@ -134,6 +141,7 @@ void main() {
             body: HabitTile(
               habit: mockHabit,
               isCompletedToday: true, // <--- SET TO TRUE
+              confettiController: ConfettiController(duration: const Duration(seconds: 1)),
               onToggle: () {},
               onLongPressBody: () {},
               onEdit: () {},

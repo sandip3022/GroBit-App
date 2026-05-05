@@ -37,13 +37,11 @@ class HabitNotifier extends StateNotifier<HabitState> {
        _updateUseCase = updateUseCase,
        super(HabitState([]));
 
-  // --- UPDATED: Accepts 'date' parameter ---
   void toggle(HabitEntity habit, DateTime date) async {
     await _toggleUseCase.call(habit, date); // Toggle for the SPECIFIC date
     loadHabits(date); // Reload that date's data
   }
 
-  // Habits are always created for "Lifecycle", so we usually reload the *current* view
   void addHabit(HabitEntity habit, DateTime currentDate) async {
     await _createUseCase.call(habit);
     loadHabits(currentDate);

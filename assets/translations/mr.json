@@ -161,12 +161,10 @@
   "completed_on": "{} रोजी पूर्ण",
   "total": "एकूण",
   "streak": "सातत्य",
-  "calculate": "मोजा",
   "average_completion_rate": "मागील 30 दिवसांतील सरासरी पूर्णता दर {} टक्के आहे",
   "chart_consistency_trend": "मागील 30 दिवसांतील सवयींच्या सातत्याचा बार चार्ट",
   "habit_success_status": "{} चा यश दर {} टक्के आहे",
-  "free_member": "मोफत सदस्य",
-  "user_profile": "{}, {} प्रोफाइल",
+  "user_profile": "{} प्रोफाइल",
   "onboarding_progress": "{} पैकी {}",
   "let_get_started": "चला सुरुवात करूया",
   "what_should_we_call_you": "तुम्हाला आम्ही\nकशा नावाने हाक मारू?",
@@ -182,5 +180,6 @@
   "today": "आज",
   "delete_habit": "सवय सोडा",
   "log_out": "बाहेर पडा",
-  "please_setup_security_first": "हे वैशिष्ट्य वापरण्यासाठी, कृपया आधी सुरक्षा सेट करा."
+  "please_setup_security_first": "हे वैशिष्ट्य वापरण्यासाठी, कृपया आधी सुरक्षा सेट करा.",
+  "habit_details": "सवयीचे तपशील"
 }

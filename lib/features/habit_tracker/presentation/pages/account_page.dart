@@ -401,8 +401,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   ) {
     return Semantics(
       label: "user_profile".tr(
-        args: [_userName, "free_member".tr()],
-      ), // Add to JSON: "User Profile: {}, {}"
+        args: [_userName],
+      ), // Add to JSON: "User Profile: {}"
       excludeSemantics: true,
       child: Column(
         children: [
@@ -435,11 +435,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               fontWeight: FontWeight.bold,
               color: colorScheme.onSurface,
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            "free_member".tr(),
-            style: textTheme.bodyMedium?.copyWith(color: colorScheme.onSurface),
           ),
         ],
       ),

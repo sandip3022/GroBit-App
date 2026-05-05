@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,6 +23,7 @@ class JournalPage extends ConsumerStatefulWidget {
 }
 
 class _JournalPageState extends ConsumerState<JournalPage> {
+  late ConfettiController _confettiController;
   @override
   void initState() {
     super.initState();
@@ -29,6 +31,16 @@ class _JournalPageState extends ConsumerState<JournalPage> {
       final date = ref.read(selectedDateProvider);
       ref.read(habitNotifierProvider.notifier).loadHabits(date);
     });
+
+    _confettiController = ConfettiController(
+      duration: const Duration(seconds: 2),
+    );
+  }
+
+  @override
+  void dispose() {
+    _confettiController.dispose();
+    super.dispose();
   }
 
   HabitState get habitState => ref.watch(habitNotifierProvider);
@@ -72,8 +84,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                   ? _buildEmptyState()
                   : ReorderableListView.builder(
                       shrinkWrap: true,
-                      physics:
-                          const AlwaysScrollableScrollPhysics(), 
+                      physics: const AlwaysScrollableScrollPhysics(),
                       itemCount: habitState.habits.length,
                       onReorder: (oldIndex, newIndex) {
                         ref
@@ -103,7 +114,12 @@ class _JournalPageState extends ConsumerState<JournalPage> {
                           child: HabitTile(
                             habit: habit,
                             isCompletedToday: habit.isCompletedOn(selectedDate),
+                            confettiController: _confettiController,
                             onToggle: () {
+                              if (!habit.isCompletedOn(selectedDate)) {
+                                _confettiController.play();
+                              }
+
                               ref
                                   .read(habitNotifierProvider.notifier)
                                   .toggle(habit, selectedDate);
@@ -144,7 +160,11 @@ class _JournalPageState extends ConsumerState<JournalPage> {
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Theme.of(context).colorScheme.primary,
-        child:  Icon(Icons.add, color: Colors.white,semanticLabel: "add_new_habit".tr()),
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+          semanticLabel: "add_new_habit".tr(),
+        ),
         onPressed: () async {
           // Pass selectedDate to refresh properly after adding
           final current = ref.read(selectedDateProvider);
@@ -163,8 +183,12 @@ class _JournalPageState extends ConsumerState<JournalPage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.calendar_today, size: 60, color: Colors.grey[300],
-          semanticLabel: "empty_calendar_icon".tr(),),
+          Icon(
+            Icons.calendar_today,
+            size: 60,
+            color: Colors.grey[300],
+            semanticLabel: "empty_calendar_icon".tr(),
+          ),
           const SizedBox(height: 16),
           Text(
             "no_habits_for_this_day".tr(),
@@ -205,7 +229,6 @@ class _JournalPageState extends ConsumerState<JournalPage> {
             child: const Text("delete").tr(),
           ),
         ],
-        
       ),
     );
   }

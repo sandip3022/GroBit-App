@@ -160,12 +160,10 @@
   "completed_on":"Completed on {}",
   "total":"Total",
   "streak":"Streak",
-  "calculate":"Calculate",
   "average_completion_rate":"Average completion rate for the last 30 days is {} percent",
   "chart_consistency_trend":"Bar chart showing habit consistency over the last 30 days",
   "habit_success_status":"{} has a success rate of {} percent",
-  "free_member":"Free Member",
-  "user_profile":"{}, {} Profile",
+  "user_profile":"{} Profile",
   "onboarding_progress":"{} of {}",
   "let_get_started":"Let's get started",
   "what_should_we_call_you":"What should we\ncall you?",
@@ -183,5 +181,6 @@
   "delete_habit_confirmation": "Are you sure you want to delete the habit '{}'?",
   "log_out": "Log Out",
   "please_setup_security_first": "Please set up security first to access this feature.",
-  "unlock_with_fingerprint": "Unlock with Fingerprint"
+  "unlock_with_fingerprint": "Unlock with Fingerprint",
+  "habit_details": "Habit Details"
 }
