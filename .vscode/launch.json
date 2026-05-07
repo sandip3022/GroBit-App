@@ -18,7 +18,7 @@
             "flutterMode": "profile"
         },
         {
-            "name": "habit_tracker_app_2026 (release mode)",
+            "name": "Release habit_tracker_app_2026",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
