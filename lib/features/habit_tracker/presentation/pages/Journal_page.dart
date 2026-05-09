@@ -33,7 +33,7 @@ class _JournalPageState extends ConsumerState<JournalPage> {
     });
 
     _confettiController = ConfettiController(
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 1),
     );
   }
 

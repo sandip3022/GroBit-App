@@ -24,34 +24,7 @@ class AccountPage extends ConsumerStatefulWidget {
 
 class _AccountPageState extends ConsumerState<AccountPage> {
   bool _isNotificationOn = false;
-  TimeOfDay _notificationTime = const TimeOfDay(hour: 9, minute: 0);
 
-  @override
-  void initState() {
-    super.initState();
-    _loadNotificationSettings();
-  }
-
-  void _loadNotificationSettings() {
-    final box = Hive.box('settings');
-
-    setState(() {
-      _isNotificationOn = box.get('isNotificationOn', defaultValue: false);
-
-      String? savedTime = box.get('notificationTime');
-
-      if (savedTime != null && savedTime.contains(':')) {
-        final parts = savedTime.split(':');
-        _notificationTime = TimeOfDay(
-          hour: int.parse(parts[0]),
-          minute: int.parse(parts[1]),
-        );
-      } else {
-        // Fallback to default 9:00 AM if nothing is saved
-        _notificationTime = const TimeOfDay(hour: 9, minute: 0);
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +62,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   children: [
                     if (notifState.isNotificationOn)
                       Text(
-                        _notificationTime.format(context),
+                        notifState.selectedTime.format(context),
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.onSurface,
                           fontWeight: FontWeight.bold,

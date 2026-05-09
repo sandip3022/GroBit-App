@@ -6,22 +6,23 @@
     "configurations": [
 
         {
-            "name": "habit_tracker_app_2026",
+            "name": "Debug grobit",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "flutterMode": "debug"
             
         },
         {
-            "name": "habit_tracker_app_2026 (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "Release habit_tracker_app_2026",
+            "name": "Release grobit",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
+        },
+        {
+            "name": "Profile grobit",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }, 
     ]
 }

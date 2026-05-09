@@ -188,7 +188,7 @@ class PrivacyLockPage extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: colorScheme.surface, // <--- Dynamic Surface
+        color: colorScheme.surface, 
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           // Shadow mostly for light mode
@@ -237,7 +237,7 @@ class PrivacyLockPage extends ConsumerWidget {
           ),
           Switch(
             value: value,
-            activeThumbColor: AppColors.primary,
+            activeThumbColor: colorScheme.secondary,
             onChanged: onChanged,
           ),
         ],
