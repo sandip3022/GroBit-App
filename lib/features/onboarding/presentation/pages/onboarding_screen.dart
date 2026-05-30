@@ -47,6 +47,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   ];
 
   void _nextPage() {
+     if(ref.read(userProvider).isOnboardingCompleted){
+      Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ), 
+                );
+     }
+
     _pageController.nextPage(
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
@@ -170,93 +179,130 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           const Spacer(),
           // Spacing
 
-          TextButton(
-            onPressed: () async {
-              try {
-                final importedHabits =
-                    await ImportService.importHabitsFromCSV();
-
-                if (!context.mounted) return;
-
-                if (importedHabits == null) {
-                  return; // User canceled the picker
-                }
-
-                if (importedHabits.isEmpty) {
+          AbsorbPointer(
+            absorbing: ref.watch(userProvider).isBackRestored, // Disable if backup is restored
+            child: TextButton(
+              child: Text(
+                "already_have_backup".tr(),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onSurface.withValues(alpha: 0.6),
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              onPressed: () async {
+                try {
+                  final importedHabits =
+                      await ImportService.importHabitsFromCSV();
+            
+                  if (!context.mounted) return;
+            
+                  if (importedHabits == null) {
+                    return; // User canceled the picker
+                  }
+            
+                  if (importedHabits.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text("invalid_backup_file".tr()),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                    return;
+                  }
+            
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text("invalid_backup_file".tr()),
-                      backgroundColor: Colors.orange,
+                      content: Text("restoring_your_habits".tr()),
+                      backgroundColor: AppColors.primary,
                     ),
                   );
-                  return;
-                }
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text("restoring_your_habits".tr()),
-                    backgroundColor: AppColors.primary,
-                  ),
-                );
-
-                await ref
-                    .read(habitNotifierProvider.notifier)
-                    .importHabits(importedHabits);
-
-                if (!context.mounted) return;
-                newName = _nameController.text.trim().isEmpty
-                    ? "Guest"
-                    : _nameController.text.trim();
-                ref.read(userProvider.notifier).setName(newName);
-
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const HomePage(),
-                  ), // Replace with your actual Home widget
-                );
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      "welcome_back_restored_habits".tr(
-                        args: [importedHabits.length.toString()],
-                      ),
-                    ),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              } catch (e) {
-                if (context.mounted) {
+            
+                  await ref
+                      .read(habitNotifierProvider.notifier)
+                      .importHabits(importedHabits);
+            
+                  if (!context.mounted) return;
+                  newName = _nameController.text.trim().isEmpty
+                      ? "Guest"
+                      : _nameController.text.trim();
+                  ref.read(userProvider.notifier).setName(newName);
+            
+                 
+                  await ref.read(userProvider.notifier).setisBackRestored(true);
+                  await ref.read(userProvider.notifier).completeOnboarding();
+            
+                  
+            
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        "error_restoring_backup".tr(args: [e.toString()]),
+                        "welcome_back_restored_habits".tr(
+                          args: [importedHabits.length.toString()],
+                        ),
                       ),
-                      backgroundColor: Colors.red,
+                      backgroundColor: Colors.green,
                     ),
                   );
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          "error_restoring_backup".tr(args: [e.toString()]),
+                        ),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
-              }
-            },
-            child: Text(
-              "already_have_backup".tr(),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(
-                  context,
-                ).colorScheme.onSurface.withValues(alpha: 0.6),
-                decoration: TextDecoration.underline,
-                fontWeight: FontWeight.w600,
-              ),
+              }, 
             ),
           ),
 
-          SizedBox(height: 16),
+          Visibility(
+            visible: ref.watch(userProvider).isBackRestored,
+            child: Column(
+              children: [
+                SizedBox(height: 16),
+                
+                  Container(
+                  alignment: Alignment.center,
+                  padding:  EdgeInsets.symmetric( vertical: 6),
+                  decoration: BoxDecoration(
+                    color: colorScheme.primary.withValues(alpha: 0.5),
+                    borderRadius: BorderRadius.circular(6),
+                    border: Border.all(color: colorScheme.onSurface, width: 1.5),
+                  ),
+                  child: Semantics(
+                    button: true,
+                    label: "backup_file_imported".tr(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                         Icon(Icons.done_sharp, size: 16, color: colorScheme.onPrimary),
+                        const SizedBox(width: 20),
+                        Text(
+                          "backup_file_imported".tr(),
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontSize: 16,
+                                color: colorScheme.onPrimary,
+                                fontWeight: FontWeight.w600,
+                              ),
+                        ),
+                      ],
+                    ),),),
+              ],
+            ),
+          ),
+              SizedBox(height: 16),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
               onPressed: _nameController.text.isNotEmpty ? _nextPage : null,
-              child: Text("next_step").tr(),
+              child:  Text((ref.watch(userProvider).isBackRestored) ? "go_to_home_page".tr() : "next_step".tr()),
             ),
           ),
         ],
@@ -267,7 +313,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   // --- STEP 2: HABITS ---
   Widget _buildHabitStep() {
     final colorScheme = Theme.of(context).colorScheme;
-    final isDark = ref.watch(themeProvider) == ThemeMode.dark;
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(

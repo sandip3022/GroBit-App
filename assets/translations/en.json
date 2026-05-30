@@ -189,5 +189,7 @@
   "preparing_file": "Preparing your file...",
   "permission_denied": "Permission denied",
   "export_failed": "Oops, export failed. Please try again.",
-  "export_success": "Export saved successfully!"
+  "export_success": "Export saved successfully!",
+  "backup_file_imported": "Backup file imported successfully!",
+  "go_to_home_page": "Go to Home Page"
 }
