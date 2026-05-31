@@ -1,6 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/home_page.dart';
+import 'package:habit_tracker_app_2026/features/onboarding/presentation/state_management/user_provider.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/pin_screen.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../state_management/privacy_provider.dart';
@@ -12,6 +14,7 @@ class PrivacyLockPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final privacyState = ref.watch(privacyProvider);
     final notifier = ref.read(privacyProvider.notifier);
+    final userState = ref.watch(userProvider);
 
     // 1. Access Theme Data
     final colorScheme = Theme.of(context).colorScheme;
@@ -29,11 +32,7 @@ class PrivacyLockPage extends ConsumerWidget {
           style: textTheme.displayMedium?.copyWith(fontSize: 22),
         ),
         elevation: 0,
-        leading: IconButton(
-          // Dynamic Icon Color
-          icon: Icon(Icons.arrow_back_ios_new, color: colorScheme.onSurface),
-          onPressed: () => Navigator.pop(context),
-        ),
+        automaticallyImplyLeading: false,
       ),
       body: Padding(
         padding: const EdgeInsets.all(24.0),
@@ -101,6 +100,25 @@ class PrivacyLockPage extends ConsumerWidget {
                   );
                 }
               },
+            ),
+
+            Spacer(),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                  onPressed: (){
+                    if(!userState.isOnboardingCompleted){
+                     ref.read(userProvider.notifier).completeOnboarding();
+                    }
+                   Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const HomePage(),
+                  ), 
+                );
+                  },
+                  child: Text("go_to_home_page".tr()),
+                ),
             ),
 
             // --- RESET OPTION (Only visible if PIN is on) ---
