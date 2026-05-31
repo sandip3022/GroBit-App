@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_app_2026/core/constants/app_icons.dart';
+import 'package:habit_tracker_app_2026/core/utils/validators.dart';
 import 'package:habit_tracker_app_2026/main.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/entities/habit_entity.dart';
@@ -18,6 +19,7 @@ class AddHabitPage extends ConsumerStatefulWidget {
 
 class _AddHabitPageState extends ConsumerState<AddHabitPage> {
   final _titleController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   late Color _selectedColor;
   late IconData _selectedIcon;
@@ -91,7 +93,12 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
   }
 
   void _saveHabit() {
-    if (_titleController.text.trim().isEmpty) return;
+    if (_formKey.currentState?.validate() != true) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("please_enter_habit_name".tr())));
+      return;
+    }
 
     if (_frequency == HabitFrequency.specificDays && _selectedDays.isEmpty) {
       _frequency = HabitFrequency.daily;
@@ -145,14 +152,14 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.close, color: colorScheme.onSurface),
-          tooltip: "close".tr(), 
+          tooltip: "close".tr(),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           TextButton(
             onPressed: _saveHabit,
             child: Text(
-              "save_all_cap".tr(),
+              "save".tr(),
               style: textTheme.labelLarge?.copyWith(
                 color: colorScheme.onSurface,
                 letterSpacing: 1.0,
@@ -178,24 +185,49 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               decoration: BoxDecoration(
-                color: colorScheme.surface, 
+                color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: TextField(
-                controller: _titleController,
-                style: textTheme.bodyLarge?.copyWith(
-                  fontSize: 18,
-                  color: colorScheme.onSurface,
-                ),
-                decoration: InputDecoration(
-                  hintText: "example_habit".tr(),
-                  hintStyle: TextStyle(
-                    color: colorScheme.onSurface.withValues(alpha: 0.5),
+              child: Form(
+                key: _formKey,
+                child: TextFormField(
+                  controller: _titleController,
+                  style: textTheme.bodyLarge?.copyWith(
+                    fontSize: 18,
+                    color: colorScheme.onSurface,
                   ),
-                  border: InputBorder.none,
-                  icon: Icon(
-                    Icons.edit_outlined,
-                    color: colorScheme.onSurface.withValues(alpha: 0.7),
+                  validator: (value) {
+                    return Validators.validateName(value);
+                  },
+                  errorBuilder: (context, error) {
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 12.0),
+                      child: Text(
+                        error,
+                        style: textTheme.labelSmall?.copyWith(
+                          color: colorScheme.error,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          height: 1.2,
+                        ),
+                      ),
+                    );
+                  },
+                  onChanged: (_) {
+                    if (_formKey.currentState?.validate() == true) {
+                      setState(() {});
+                    }
+                  },
+                  decoration: InputDecoration(
+                    hintText: "example_habit".tr(),
+                    hintStyle: TextStyle(
+                      color: colorScheme.onSurface.withValues(alpha: 0.5),
+                    ),
+                    border: InputBorder.none,
+                    icon: Icon(
+                      Icons.edit_outlined,
+                      color: colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
                 ),
               ),
@@ -241,8 +273,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
                   final isSelected = _selectedColor == color;
                   return Semantics(
                     button: true,
-                    selected:
-                        isSelected, 
+                    selected: isSelected,
                     label: _colorNames[index],
                     child: GestureDetector(
                       onTap: () => setState(() => _selectedColor = color),
@@ -309,7 +340,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
                       decoration: BoxDecoration(
                         color: isSelected
                             ? _selectedColor.withValues(alpha: 0.15)
-                            : colorScheme.surface, 
+                            : colorScheme.surface,
                         borderRadius: BorderRadius.circular(12),
                         border: isSelected
                             ? Border.all(color: _selectedColor, width: 2)
@@ -330,6 +361,13 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               },
             ),
             const SizedBox(height: 50),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _saveHabit,
+                child: Text("save".tr()),
+              ),
+            ),
           ],
         ),
       ),

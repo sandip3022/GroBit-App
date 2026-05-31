@@ -29,7 +29,7 @@
   "reminders_turned_off": "Reminders turned off",
   "edit_habit": "Edit Habit",
   "new_habit": "New Habit",
-  "save_all_cap": "SAVE",
+  "save": "Save",
   "what_do_you_want_to_do": "WHAT DO YOU WANT TO DO?",
   "example_habit": "e.g. Read 10 pages",
   "frequency_all_cap": "FREQUENCY",
@@ -121,7 +121,6 @@
   "timer": "Timer",
   "timer_tab": "Timer Tab",
   "keep_habits_but_clear_history": "Keep habits, clear history",
-  "delete_cap":"DELETE",
   "export_to_csv":"Export to CSV",
   "language":"Language",
   "start": "Start",
@@ -191,5 +190,6 @@
   "export_failed": "Oops, export failed. Please try again.",
   "export_success": "Export saved successfully!",
   "backup_file_imported": "Backup file imported successfully!",
-  "go_to_home_page": "Go to Home Page"
+  "go_to_home_page": "Go to Home Page",
+  "please_enter_habit_name": "Please enter a name for your habit."
 }

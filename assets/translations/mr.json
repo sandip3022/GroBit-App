@@ -29,7 +29,7 @@
   "reminders_turned_off": "स्मरणपत्रे बंद केली",
   "edit_habit": "सवय संपादित करा",
   "new_habit": "नवीन सवय",
-  "save_all_cap": "जतन करा",
+  "save": "जतन करा",
   "what_do_you_want_to_do": "तुम्हाला काय करायचे आहे?",
   "example_habit": "उदा. 10 पाने वाचा",
   "frequency_all_cap": "वारंवारता",
@@ -122,7 +122,6 @@
   "timer": "टायमर",
   "timer_tab": "टायमर टॅब",
   "keep_habits_but_clear_history": "सवयी ठेवा, पण इतिहास साफ करा",
-  "delete_cap": "हटवा",
   "export_to_csv": "CSV मध्ये निर्यात करा",
   "language": "भाषा",
   "start": "सुरू करा",
@@ -190,5 +189,6 @@
   "export_failed": "अरेरे, एक्सपोर्ट अयशस्वी झाले. कृपया पुन्हा प्रयत्न करा.",
   "export_success": "एक्सपोर्ट यशस्वीरित्या सेव्ह झाले!",
   "backup_file_imported": "बॅकअप फाइल यशस्वीरित्या आयात केली गेली!",
-  "go_to_home_page": "मुख्य पृष्ठावर जा"
+  "go_to_home_page": "मुख्य पृष्ठावर जा",
+  "please_enter_habit_name": "कृपया तुमच्या सवयीसाठी एक नाव प्रविष्ट करा."
 }
