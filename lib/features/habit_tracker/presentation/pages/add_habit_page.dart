@@ -250,6 +250,10 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               const SizedBox(height: 16),
               _buildDaySelector(colorScheme),
             ],
+            if (_frequency == HabitFrequency.specificDates) ...[
+              const SizedBox(height: 16),
+              _buildDateSelector(colorScheme),
+            ],
 
             const SizedBox(height: 32),
 
@@ -394,6 +398,11 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               HabitFrequency.specificDays,
               colorScheme,
             ),
+            _buildToggleOption(
+              "specific_dates".tr(),
+              HabitFrequency.specificDates,
+              colorScheme,
+            ),
           ],
         ),
       ),
@@ -408,7 +417,14 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
     final isSelected = _frequency == val;
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => _frequency = val),
+          onTap: () {
+          if (_frequency != val) {
+            setState(() {
+              _frequency = val;
+              _selectedDays.clear(); 
+            });
+          }
+        },
         behavior: HitTestBehavior.opaque,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
@@ -452,6 +468,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
         return ChoiceChip(
           label: Text(days[index]),
           selected: isSelected,
+          showCheckmark: false,
           selectedColor: AppColors.secondary,
           backgroundColor: colorScheme.surface, // <--- Dynamic
           labelStyle: TextStyle(
@@ -468,6 +485,42 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
                 _selectedDays.add(dayIndex);
               } else {
                 _selectedDays.remove(dayIndex);
+              }
+            });
+          },
+        );
+      }),
+    );
+  }
+
+  Widget _buildDateSelector(ColorScheme colorScheme) {
+    return Wrap(
+      spacing: 4,
+      runSpacing: 4,
+      children: List.generate(31, (index) {
+        final date = index + 1;
+        final isSelected = _selectedDays.contains(date);
+        return ChoiceChip(
+          label: Text(date.toString()),
+          selected: isSelected,
+          shape: CircleBorder(),
+          showCheckmark: false,
+          selectedColor: AppColors.secondary,
+          backgroundColor: colorScheme.surface,
+           
+          labelStyle: TextStyle(
+            color: isSelected ? Colors.white : colorScheme.onSurface,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+          side: isSelected
+              ? BorderSide.none
+              : BorderSide(color: colorScheme.onSurface.withValues(alpha: 0.1)),
+          onSelected: (selected) {
+            setState(() {
+              if (selected) {
+                _selectedDays.add(date);
+              } else {
+                _selectedDays.remove(date);
               }
             });
           },

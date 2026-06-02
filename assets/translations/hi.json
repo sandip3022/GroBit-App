@@ -190,6 +190,7 @@
   "export_success": "एक्सपोर्ट सफलतापूर्वक सेव हो गया!",
   "backup_file_imported": "बैकअप फ़ाइल सफलतापूर्वक आयात की गई!",
   "go_to_home_page": "होम पेज पर जाएं",
-  "please_enter_habit_name": "कृपया अपनी आदत के लिए एक नाम दर्ज करें।"
+  "please_enter_habit_name": "कृपया अपनी आदत के लिए एक नाम दर्ज करें।",
+  "specific_dates": "विशिष्ट तिथियां"
 
 }

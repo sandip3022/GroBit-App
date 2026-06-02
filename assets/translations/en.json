@@ -191,5 +191,6 @@
   "export_success": "Export saved successfully!",
   "backup_file_imported": "Backup file imported successfully!",
   "go_to_home_page": "Go to Home Page",
-  "please_enter_habit_name": "Please enter a name for your habit."
+  "please_enter_habit_name": "Please enter a name for your habit.",
+  "specific_dates":"Specific Dates"
 }

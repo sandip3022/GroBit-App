@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // Needed for Color
 
-enum HabitFrequency { daily, weekly, specificDays }
+enum HabitFrequency { daily, weekly, specificDays, specificDates }
 
 class HabitEntity {
   final String id;
@@ -44,6 +44,10 @@ class HabitEntity {
     if (frequency == HabitFrequency.specificDays) {
       // DateTime.weekday: 1 = Monday, 7 = Sunday
       return targetDays.contains(date.weekday);
+    }
+
+    if (frequency == HabitFrequency.specificDates) {
+      return targetDays.contains(date.day);
     }
 
     return true;
