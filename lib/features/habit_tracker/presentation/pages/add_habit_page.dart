@@ -7,6 +7,7 @@ import 'package:habit_tracker_app_2026/main.dart';
 import 'package:uuid/uuid.dart';
 import '../../domain/entities/habit_entity.dart';
 import '../../../../core/theme/app_colors.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/state_management/habit_provider.dart';
 
 class AddHabitPage extends ConsumerStatefulWidget {
   final HabitEntity? habitToEdit;
@@ -104,6 +105,8 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
       _frequency = HabitFrequency.daily;
     }
 
+    final currentDate = ref.read(selectedDateProvider);
+
     if (widget.habitToEdit != null) {
       final updatedHabit = HabitEntity(
         id: widget.habitToEdit!.id,
@@ -117,7 +120,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
       );
       ref
           .read(habitNotifierProvider.notifier)
-          .updateHabit(updatedHabit, DateTime.now());
+          .updateHabit(updatedHabit, currentDate);
     } else {
       final newHabit = HabitEntity(
         id: const Uuid().v4(),
@@ -131,7 +134,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
       );
       ref
           .read(habitNotifierProvider.notifier)
-          .addHabit(newHabit, DateTime.now());
+          .addHabit(newHabit, currentDate);
     }
     Navigator.pop(context);
   }

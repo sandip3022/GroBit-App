@@ -166,7 +166,6 @@ class _JournalPageState extends ConsumerState<JournalPage> {
           semanticLabel: "add_new_habit".tr(),
         ),
         onPressed: () async {
-          // Pass selectedDate to refresh properly after adding
           final current = ref.read(selectedDateProvider);
           await Navigator.push(
             context,
