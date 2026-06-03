@@ -57,11 +57,9 @@ class _JournalPageState extends ConsumerState<JournalPage> {
 
   @override
   Widget build(BuildContext context) {
-    final userName = ref.watch(userProvider);
     return Scaffold(
-      appBar: HomeAppBar(
-        userName: userName.name,
-        onTimerTap: () {
+      appBar:HomeAppBar(
+         onTimerTap: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const TimerHome()),
