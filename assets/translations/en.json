@@ -95,7 +95,7 @@
   "restoring_your_habits": "Restoring your habits...",
   "welcome_back_restored_habits": "Welcome back! Restored {} habits.",
   "error_restoring_backup": "Error restoring backup: {}",
-  "already_have_backup": "Already have a backup? Restore here",
+  "already_have_backup": "Already have a backup? Restore Grobit CSV file here",
   "next_step": "Next Step",
   "kickstart_your_journey": "Kickstart your journey",
   "pick_some_habits": "Pick some habits to get started",

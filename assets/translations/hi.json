@@ -96,7 +96,7 @@
   "restoring_your_habits": "आपकी आदतें पुनर्स्थापित की जा रही हैं...",
   "welcome_back_restored_habits": "वापस स्वागत है! {} आदतें पुनर्स्थापित हुईं।",
   "error_restoring_backup": "बैकअप पुनर्स्थापित करते समय त्रुटि: {}",
-  "already_have_backup": "क्या आपके पास पहले से बैकअप है? यहां पुनर्स्थापित करें",
+  "already_have_backup": "क्या आपके पास पहले से बैकअप है? यहां Grobit CSV फाइल पुनर्स्थापित करें",
   "next_step": "अगला चरण",
   "kickstart_your_journey": "अपनी यात्रा शुरू करें",
   "pick_some_habits": "शुरू करने के लिए कुछ आदतें चुनें",

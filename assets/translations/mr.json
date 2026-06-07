@@ -96,7 +96,7 @@
   "restoring_your_habits": "तुमच्या सवयी पुनर्संचयित करत आहे...",
   "welcome_back_restored_habits": "पुन्हा स्वागत! {} सवयी पुनर्संचयित केल्या.",
   "error_restoring_backup": "बॅकअप पुनर्संचयित करताना त्रुटी: $e",
-  "already_have_backup": "आधीच बॅकअप आहे? येथे पुनर्संचयित करा",
+  "already_have_backup": "आधीच बॅकअप आहे का? Grobit CSV फाईल येथे रिस्टोअर करा.",
   "next_step": "पुढचा टप्पा",
   "kickstart_your_journey": "तुमचा प्रवास सुरू करा",
   "pick_some_habits": "सुरुवात करण्यासाठी काही सवयी निवडा",
