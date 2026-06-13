@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/Journal_page.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/journal_page.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/account_page.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/progress_page.dart';
 import 'package:habit_tracker_app_2026/main.dart';

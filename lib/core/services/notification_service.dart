@@ -1,4 +1,4 @@
-import 'dart:developer' as Console;
+import 'dart:developer' as console;
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -92,7 +92,7 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-    Console.log('Scheduled daily notification at ${time.toString()}');
+    console.log('Scheduled daily notification at ${time.toString()}');
   }
 
   Future<void> cancelNotifications() async {
