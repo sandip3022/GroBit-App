@@ -4,14 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_app_2026/core/services/export_service.dart';
 import 'package:habit_tracker_app_2026/core/services/import_service.dart';
 import 'package:habit_tracker_app_2026/core/services/notification_service.dart';
-import 'package:habit_tracker_app_2026/core/services/user_provider.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/privacy_lock_page.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/state_management/notification_provider.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/state_management/privacy_provider.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/widgets/settings_widget.dart';
 import 'package:habit_tracker_app_2026/features/onboarding/presentation/pages/login_screen.dart';
+import 'package:habit_tracker_app_2026/features/onboarding/presentation/state_management/user_provider.dart';
 import 'package:habit_tracker_app_2026/main.dart';
-import 'package:hive/hive.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/theme_provider.dart';
 
@@ -23,16 +22,13 @@ class AccountPage extends ConsumerStatefulWidget {
 }
 
 class _AccountPageState extends ConsumerState<AccountPage> {
-  bool _isNotificationOn = false;
-
-
   @override
   Widget build(BuildContext context) {
     // 1. WATCH THE THEME PROVIDER
     final currentTheme = ref.watch(themeProvider);
     final notifState = ref.watch(notificationProvider);
     final isDarkMode = currentTheme == ThemeMode.dark;
-    final String _userName = ref.watch(userProvider);
+    final String userName = ref.watch(userProvider.select((state) => state.name));
 
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
@@ -50,7 +46,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         padding: const EdgeInsets.all(24.0),
         child: Column(
           children: [
-            _buildProfileSection(textTheme, colorScheme, _userName),
+            _buildProfileSection(textTheme, colorScheme, userName),
 
             const SizedBox(height: 40),
             BuildSettingsCard(
@@ -169,13 +165,25 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 
                 if (currentHabits.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("No habits to export yet!")),
+                    SnackBar(
+                      content: Text(
+                        "no_habits_to_export".tr(),
+                        style: TextStyle(color: colorScheme.onSecondary),
+                      ),
+                      backgroundColor: colorScheme.secondaryContainer,
+                    ),
                   );
                   return;
                 }
 
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text("Preparing your file...")),
+                  SnackBar(
+                    content: Text(
+                      "preparing_file".tr(),
+                      style: TextStyle(color: colorScheme.onPrimaryContainer),
+                    ),
+                    backgroundColor: colorScheme.primaryContainer,
+                  ),
                 );
 
                 try {
@@ -185,18 +193,24 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 
                   if (success && context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Export saved successfully!"),
-                        backgroundColor: Colors.green,
+                      SnackBar(
+                        content: Text(
+                          "export_success".tr(),
+                          style: TextStyle(color: AppColors.white),
+                        ),
+                        backgroundColor: AppColors.green,
                       ),
                     );
                   }
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Oops, export failed. Please try again."),
-                        backgroundColor: Colors.red,
+                      SnackBar(
+                        content: Text(
+                          "export_failed".tr(),
+                          style: TextStyle(color: AppColors.white),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.error,
                       ),
                     );
                   }
@@ -214,7 +228,13 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               ),
               onTap: () async {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text("select_backup_file".tr())),
+                  SnackBar(
+                    content: Text(
+                      "select_backup_file".tr(),
+                      style: TextStyle(color: colorScheme.onPrimaryContainer),
+                    ),
+                    backgroundColor: colorScheme.primaryContainer,
+                  ),
                 );
 
                 try {
@@ -232,9 +252,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                       SnackBar(
                         content: Text(
                           "invalid_backup_file".tr(),
-                          style: TextStyle(color: Colors.white),
+                          style: TextStyle(color: AppColors.white),
                         ),
-                        backgroundColor: Colors.orange,
+                        backgroundColor: Theme.of(context).colorScheme.error,
                       ),
                     );
                     return;
@@ -251,16 +271,20 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         "successfully_restored_habits".tr(
                           args: [importedHabits.length.toString()],
                         ),
+                        style: TextStyle(color: AppColors.white),
                       ),
-                      backgroundColor: Colors.green,
+                      backgroundColor: AppColors.green,
                     ),
                   );
                 } catch (e) {
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                        content: Text(e.toString()),
-                        backgroundColor: Colors.red,
+                        content: Text(
+                          e.toString(),
+                          style: TextStyle(color: AppColors.white),
+                        ),
+                        backgroundColor: Theme.of(context).colorScheme.error,
                       ),
                     );
                   }
@@ -292,7 +316,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text("please_setup_security_first".tr()),
-                      backgroundColor: colorScheme.errorContainer,
+                      backgroundColor: colorScheme.error,
                     ),
                   );
                 }
@@ -325,7 +349,13 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   ref.read(habitNotifierProvider.notifier).resetAllProgress();
                   Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text("progress_reset_successfully".tr())),
+                    SnackBar(
+                      content: Text(
+                        "progress_reset_successfully".tr(),
+                        style: TextStyle(color: colorScheme.onPrimaryContainer),
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
                   );
                 },
               ),
@@ -350,10 +380,10 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                        "All data deleted".tr(),
-                        style: TextStyle(color: Colors.white),
+                        "all_data_deleted".tr(),
+                        style: TextStyle(color: AppColors.white),
                       ),
-                      backgroundColor: Colors.red,
+                      backgroundColor: colorScheme.error,
                     ),
                   );
                 },
@@ -370,11 +400,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   Widget _buildProfileSection(
     TextTheme textTheme,
     ColorScheme colorScheme,
-    String _userName,
+    String userName,
   ) {
     return Semantics(
       label: "user_profile".tr(
-        args: [_userName],
+        args: [userName],
       ), // Add to JSON: "User Profile: {}"
       excludeSemantics: true,
       child: Column(
@@ -393,7 +423,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
             ),
             alignment: Alignment.center,
             child: Text(
-              _getInitials(_userName),
+              _getInitials(userName),
               style: textTheme.displayMedium?.copyWith(
                 color: AppColors.secondary,
                 fontSize: 32,
@@ -401,13 +431,39 @@ class _AccountPageState extends ConsumerState<AccountPage> {
             ),
           ),
           const SizedBox(height: 16),
-          Text(
-            _userName,
-            // Use 'onSurface' so it is Black in Light Mode, White in Dark Mode
-            style: textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: colorScheme.onSurface,
-            ),
+          Row(
+            children: [
+              const Expanded(child: SizedBox()),
+              Text(
+                userName,
+                style: textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: colorScheme.onSurface,
+                ),
+              ),
+
+              Expanded(
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 8.0,
+                    ), // Gap between text and icon
+                    child: IconButton(
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        size: 20,
+                        color: colorScheme.onSurface.withValues(alpha: 0.5),
+                      ),
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      onPressed: () =>
+                          _showEditProfileDialog(context, userName),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -457,7 +513,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
               child: Icon(
                 Icons.warning_amber_rounded,
                 size: 48,
-                color: isCritical ? Colors.red : Colors.orange,
+                color: isCritical
+                    ? Theme.of(context).colorScheme.error
+                    : Colors.orange,
               ),
             ),
             const SizedBox(height: 16),
@@ -479,7 +537,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancel"),
+                    child: const Text("cancel").tr(),
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -488,7 +546,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     onPressed: onConfirm,
                     style: OutlinedButton.styleFrom(
                       backgroundColor: isCritical
-                          ? Colors.red
+                          ? Theme.of(context).colorScheme.error
                           : AppColors.primary,
                     ),
                     child: Text(
@@ -513,9 +571,12 @@ class _AccountPageState extends ConsumerState<AccountPage> {
       final bool granted = await NotificationService().requestPermissions();
       if (!granted) {
         if (!mounted) return;
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text("Permission denied")));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("permission_denied".tr()),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
         return;
       }
 
@@ -571,5 +632,42 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         ),
       );
     }
+  }
+
+  void _showEditProfileDialog(BuildContext context, String currentName) {
+    final TextEditingController controller = TextEditingController(
+      text: currentName,
+    );
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("edit_name").tr(),
+        content: TextField(
+          controller: controller,
+          maxLength: 20,
+          decoration: InputDecoration(
+            labelText: "name".tr(),
+            border: const OutlineInputBorder(),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("cancel").tr(),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              final newName = controller.text.trim();
+              if (newName.isNotEmpty) {
+                ref.read(userProvider.notifier).setName(newName);
+                Navigator.pop(context);
+              }
+            },
+            child: const Text("save").tr(),
+          ),
+        ],
+      ),
+    );
   }
 }

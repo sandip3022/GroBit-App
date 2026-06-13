@@ -36,3 +36,4 @@ android/gradlew.bat
 android/local.properties
 *.jks
 key.properties
+*.symbols

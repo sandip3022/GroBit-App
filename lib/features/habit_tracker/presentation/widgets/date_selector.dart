@@ -1,6 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class DateSelector extends StatelessWidget {
   final DateTime selectedDate;
@@ -29,12 +28,10 @@ class DateSelector extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // PREVIOUS BUTTON
           IconButton(
             icon: Icon(
               Icons.arrow_back_ios_new, 
               size: 20, 
-              // Dynamic Grey (Visible on dark and light)
               color: colorScheme.onSurface.withValues(alpha: 0.5)
             ),
             onPressed: onPrevious,
@@ -53,6 +50,7 @@ class DateSelector extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 4),
+                Visibility(visible: isToday,child: SizedBox(width: 40), ), 
               Text(
                 DateFormat('MMM d, yyyy').format(selectedDate),
                 style: textTheme.headlineSmall?.copyWith(
@@ -67,15 +65,14 @@ class DateSelector extends StatelessWidget {
           ),
 
           // NEXT BUTTON
-          IconButton(
+                   IconButton(
             icon: Icon(
               Icons.arrow_forward_ios, 
               size: 20, 
-              // Dynamic Grey
-              color: colorScheme.onSurface.withValues(alpha: 0.5)
+              color: colorScheme.onSurface.withValues(alpha: isToday ? 0.15 : 0.5)
             ),
-            onPressed: onNext,
-          ),
+            onPressed: isToday ? null : onNext,
+          )
         ],
       ),
     );

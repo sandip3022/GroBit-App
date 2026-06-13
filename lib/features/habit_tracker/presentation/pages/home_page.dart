@@ -1,7 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/Journal_page.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/journal_page.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/account_page.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/progress_page.dart';
 import 'package:habit_tracker_app_2026/main.dart';
@@ -21,7 +21,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Load habits for the INITIAL date (Today)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final date = ref.read(selectedDateProvider);
       ref.read(habitNotifierProvider.notifier).loadHabits(date);

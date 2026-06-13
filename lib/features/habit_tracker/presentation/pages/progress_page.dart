@@ -2,42 +2,39 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_app_2026/core/constants/app_icons.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/data/models/habit_model.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/habit_history_page.dart';
-import 'package:habit_tracker_app_2026/main.dart';
+import 'package:hive/hive.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/logic/progress_calculator.dart';
 import '../widgets/progress_bar_chart.dart';
 
 class ProgressPage extends ConsumerWidget {
   const ProgressPage({super.key});
+ 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitState = ref.watch(habitNotifierProvider);
-    final stats = ProgressCalculator.calculate(habitState.habits);
-
-    // 1. Get Theme Data
+    final box = Hive.box<HabitModel>('habits');
+    final allHabitEntities = box.values.map((model) => model.toEntity()).toList();
+    final stats = ProgressCalculator.calculate(allHabitEntities);
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    // Helper color for labels
     final labelColor = colorScheme.onSurface.withValues(alpha: 0.6);
 
     return Scaffold(
-      // No backgroundColor needed (Scaffold uses Theme default)
       appBar: AppBar(
         title: Text(
           "progress_insights".tr(),
           style: textTheme.displayMedium?.copyWith(fontSize: 24),
         ),
         centerTitle: false,
-        // No backgroundColor needed
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // ROW 1: 3 BOXES
             Row(
               children: [
                 Expanded(
@@ -71,7 +68,6 @@ class ProgressPage extends ConsumerWidget {
 
             const SizedBox(height: 24),
 
-            // ROW 2: AVG COMPLETION RATE (Keep Primary Color background, it looks good in both)
             Semantics(
               label: "average_completion_rate".tr(
                 args: [(stats.avgCompletionRate * 100).toStringAsFixed(1)],
@@ -128,7 +124,6 @@ class ProgressPage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // ROW 3: BAR CHART
             Text(
               "consistency_trend".tr(),
               style: textTheme.labelSmall?.copyWith(
@@ -214,7 +209,7 @@ class ProgressPage extends ConsumerWidget {
         decoration: BoxDecoration(
           color: colorScheme.surface, // <--- Dynamic Surface
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: color.withValues(alpha: 0.1), width: 1),
+          border: Border.all(color: color.withValues(alpha: 0.3), width: 2),
         ),
         child: Column(
           children: [
@@ -290,7 +285,7 @@ class ProgressPage extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                   color: colorScheme.onSurface,
-                ), // Dynamic Text
+                ), 
               ),
             ),
             Text(

@@ -31,6 +31,7 @@ class ToggleHabitCompletion {
       completedDates: updatedDates,
       frequency: habit.frequency,
       targetDays: habit.targetDays,
+      createdAt: habit.createdAt,
     );
 
     // Save via Repository

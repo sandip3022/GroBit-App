@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/services.dart';
 
 class Validators {
@@ -11,7 +12,7 @@ class Validators {
 
   static String? validateName(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return 'Name cannot be empty';
+      return "please_enter_habit_name".tr();
     }
     
     // ^ means start, $ means end, + means one or more characters

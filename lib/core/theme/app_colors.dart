@@ -27,7 +27,7 @@ class AppColors {
   static Color secondaryTint20 = secondary.withValues(alpha: 0.2);
 
  
-
+ static const Color white = Colors.white;
   static Color airForceBlue = const Color(0xFF5D8AA8);
   static Color softCoral = const Color(0xFFFF6B6B);
   static Color purple = const Color(0xFF6C5CE7);

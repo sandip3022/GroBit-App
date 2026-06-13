@@ -19,6 +19,8 @@ class HabitModel extends HabitEntity {
   final int frequencyIndex; // Store Enum as Int
   @HiveField(6)
   final List<int> targetDays;
+  @HiveField(7) 
+  final DateTime? createdAt;
 
   HabitModel({
     required this.id,
@@ -28,6 +30,7 @@ class HabitModel extends HabitEntity {
     required this.completedDates,
     required this.frequencyIndex,
     required this.targetDays,
+    this.createdAt,
   }) : super(
           id: id,
           title: title,
@@ -38,6 +41,7 @@ class HabitModel extends HabitEntity {
     ? HabitFrequency.values[frequencyIndex] 
     : HabitFrequency.daily, 
           targetDays: targetDays,
+          createdAt: createdAt,
         );
 
   factory HabitModel.fromEntity(HabitEntity entity) {
@@ -49,6 +53,20 @@ class HabitModel extends HabitEntity {
       completedDates: entity.completedDates,
       frequencyIndex: entity.frequency.index, 
       targetDays: entity.targetDays,
+      createdAt: entity.createdAt,
+    );
+  }
+
+  HabitEntity toEntity() {
+    return HabitEntity(
+      id: id,
+      title: title,
+      iconCode: iconCode,
+      colorValue: colorValue,
+      completedDates: completedDates,
+      frequency: frequency,
+      targetDays: targetDays,
+      createdAt: createdAt,
     );
   }
 }

@@ -17,23 +17,6 @@ class FocusTimerPage extends ConsumerWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        leading: IconButton(
-          icon: Icon(
-            Icons.keyboard_arrow_down_rounded,
-            size: 32,
-            color: colorScheme.onSurface,
-          ),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: Text(
-          "focus_mode".tr(),
-          style: textTheme.displayMedium?.copyWith(fontSize: 20),
-        ),
-        centerTitle: true,
-      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

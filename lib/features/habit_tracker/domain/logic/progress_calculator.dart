@@ -65,8 +65,11 @@ class ProgressCalculator {
           break;
         }
       }
-      if (performedRecently) active++;
-      else stalled++;
+      if (performedRecently) {
+        active++;
+      } else {
+        stalled++;
+      }
     }
 
     // LAST 30 DAYS DATA (Chart + Box Logic) 

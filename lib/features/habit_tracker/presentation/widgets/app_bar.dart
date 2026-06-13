@@ -1,24 +1,25 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:habit_tracker_app_2026/features/onboarding/presentation/state_management/user_provider.dart';
 import '../../../../core/theme/app_colors.dart'; 
 
-class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String userName;
+class HomeAppBar extends ConsumerWidget implements PreferredSizeWidget {
   final String userAvatarUrl; 
   final VoidCallback onTimerTap; 
 
   const HomeAppBar({
     super.key,
-    this.userName = "Sandip",
     this.userAvatarUrl = "", 
     required this.onTimerTap,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,ref) {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final user = ref.watch(userProvider);
 
     final String dateText = DateFormat('EEEE, MMM d').format(DateTime.now()).toUpperCase();
 
@@ -48,7 +49,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
             
             // 2. MAIN HEADING
             Text(
-              "${getSalutation()}, $userName",
+              "${getSalutation()}, ${user.name}",
               style: textTheme.displayMedium?.copyWith(
                 fontSize: 28, 
                 height: 1.1,

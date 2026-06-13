@@ -1,5 +1,6 @@
-import 'dart:developer' as Console;
+import 'dart:developer' as console;
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -73,8 +74,8 @@ class NotificationService {
   Future<void> scheduleDailyNotification({required TimeOfDay time}) async {
     await flutterLocalNotificationsPlugin.zonedSchedule(
       0, // ID
-      'Time to Focus', // Title
-      'Have you worked on your habits today?', // Body
+      "habitReminderTitle".tr(), 
+      "habitReminderBody".tr(), 
       _nextInstanceOfTime(time),
       const NotificationDetails(
         android: AndroidNotificationDetails(
@@ -91,7 +92,7 @@ class NotificationService {
           UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.time,
     );
-    Console.log('Scheduled daily notification at ${time.toString()}');
+    console.log('Scheduled daily notification at ${time.toString()}');
   }
 
   Future<void> cancelNotifications() async {

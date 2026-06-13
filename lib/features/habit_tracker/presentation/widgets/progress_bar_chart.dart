@@ -21,7 +21,7 @@ class ProgressBarChart extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: colorScheme.surface, 
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
@@ -88,7 +88,9 @@ class ProgressBarChart extends StatelessWidget {
                                       "${DateFormat('MMM d').format(day.date)}: ${(day.percentage * 100).toInt()}%",
                                   child: Container(
                                     width: 4,
-                                    height: chartHeight * day.percentage,
+                                    height: day.percentage == 0.0
+                                        ? 4
+                                        : chartHeight * day.percentage,
                                     decoration: BoxDecoration(
                                       color: _getBarColor(
                                         day.percentage,
@@ -109,16 +111,19 @@ class ProgressBarChart extends StatelessWidget {
                             height: 16,
                             child: ((data.length - 1 - index) % 5 == 0)
                                 ? RotatedBox(
-                                  quarterTurns: -1,
-                                  child: Text(
+                                    quarterTurns: -1,
+                                    child: Text(
                                       DateFormat('d').format(day.date),
-                                      style: TextStyle(fontSize: 5, color: labelColor,fontWeight: FontWeight.w800,),
+                                      style: TextStyle(
+                                        fontSize: 5,
+                                        color: labelColor,
+                                        fontWeight: FontWeight.w800,
+                                      ),
                                       textAlign: TextAlign.center,
-                                      
                                     ),
-                                )
+                                  )
                                 : const SizedBox.shrink(),
-                          )
+                          ),
                         ],
                       ),
                     );

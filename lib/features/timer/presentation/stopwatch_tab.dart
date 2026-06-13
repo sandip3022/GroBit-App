@@ -69,8 +69,6 @@ class _StopwatchTabState extends State<StopwatchTab> {
     final textTheme = Theme.of(context).textTheme;
 
     return Scaffold(
-      backgroundColor: colorScheme.surface, // Adapts to theme
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,

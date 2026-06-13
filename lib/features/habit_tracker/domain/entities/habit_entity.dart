@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart'; // Needed for Color
 
-enum HabitFrequency { daily, weekly, specificDays }
+enum HabitFrequency { daily, weekly, specificDays, specificDates }
 
 class HabitEntity {
   final String id;
@@ -37,6 +37,15 @@ class HabitEntity {
 
   /// Checks if the habit should appear on the dashboard for this date
   bool isScheduledFor(DateTime date) {
+
+    if (createdAt != null) {
+      final startDay = DateTime(createdAt!.year, createdAt!.month, createdAt!.day);
+      final checkDay = DateTime(date.year, date.month, date.day);
+      
+      if (checkDay.isBefore(startDay)) {
+        return false; // The habit hasn't started yet!
+      }
+    }
     if (frequency == HabitFrequency.daily) {
       return true;
     }
@@ -44,6 +53,10 @@ class HabitEntity {
     if (frequency == HabitFrequency.specificDays) {
       // DateTime.weekday: 1 = Monday, 7 = Sunday
       return targetDays.contains(date.weekday);
+    }
+
+    if (frequency == HabitFrequency.specificDates) {
+      return targetDays.contains(date.day);
     }
 
     return true;
