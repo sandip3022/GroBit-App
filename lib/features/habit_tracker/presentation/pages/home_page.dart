@@ -21,7 +21,6 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
     super.initState();
-    // Load habits for the INITIAL date (Today)
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final date = ref.read(selectedDateProvider);
       ref.read(habitNotifierProvider.notifier).loadHabits(date);

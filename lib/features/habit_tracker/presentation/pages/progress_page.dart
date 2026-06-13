@@ -2,19 +2,22 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:habit_tracker_app_2026/core/constants/app_icons.dart';
+import 'package:habit_tracker_app_2026/features/habit_tracker/data/models/habit_model.dart';
 import 'package:habit_tracker_app_2026/features/habit_tracker/presentation/pages/habit_history_page.dart';
-import 'package:habit_tracker_app_2026/main.dart';
+import 'package:hive/hive.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../domain/logic/progress_calculator.dart';
 import '../widgets/progress_bar_chart.dart';
 
 class ProgressPage extends ConsumerWidget {
   const ProgressPage({super.key});
+ 
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final habitState = ref.watch(habitNotifierProvider);
-    final stats = ProgressCalculator.calculate(habitState.habits);
+    final box = Hive.box<HabitModel>('habits');
+    final allHabitEntities = box.values.map((model) => model.toEntity()).toList();
+    final stats = ProgressCalculator.calculate(allHabitEntities);
 
     // 1. Get Theme Data
     final colorScheme = Theme.of(context).colorScheme;
@@ -287,7 +290,7 @@ class ProgressPage extends ConsumerWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                   color: colorScheme.onSurface,
-                ), // Dynamic Text
+                ), 
               ),
             ),
             Text(

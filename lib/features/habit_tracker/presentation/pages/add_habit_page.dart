@@ -27,6 +27,8 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
 
   HabitFrequency _frequency = HabitFrequency.daily;
   List<int> _selectedDays = [];
+  DateTime now = DateTime.now();
+  DateTime _startDate = DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
   final List<Color> _colorOptions = [
     AppColors.airForceBlue,
@@ -87,9 +89,11 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
       _selectedIcon = AppIcons.getIcon(widget.habitToEdit!.iconCode);
       _frequency = widget.habitToEdit!.frequency;
       _selectedDays = List.from(widget.habitToEdit!.targetDays);
+      _startDate = widget.habitToEdit!.createdAt ??_startDate;
     } else {
       _selectedColor = _colorOptions[0];
       _selectedIcon = _iconOptions[0];
+      _startDate = _startDate;
     }
   }
 
@@ -116,7 +120,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
         completedDates: widget.habitToEdit!.completedDates,
         frequency: _frequency,
         targetDays: _selectedDays,
-        createdAt: widget.habitToEdit!.createdAt,
+        createdAt: _startDate,
       );
       ref
           .read(habitNotifierProvider.notifier)
@@ -130,11 +134,9 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
         completedDates: [],
         frequency: _frequency,
         targetDays: _selectedDays,
-        createdAt: DateTime.now(),
+        createdAt: _startDate,
       );
-      ref
-          .read(habitNotifierProvider.notifier)
-          .addHabit(newHabit, currentDate);
+      ref.read(habitNotifierProvider.notifier).addHabit(newHabit, currentDate);
     }
     Navigator.pop(context);
   }
@@ -236,7 +238,11 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               ),
             ),
 
-            const SizedBox(height: 32),
+            const SizedBox(height: 20),
+
+            _buildStartDatePicker(context),
+
+            const SizedBox(height: 12),
 
             // FREQUENCY
             Text(
@@ -249,6 +255,10 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
             const SizedBox(height: 12),
             _buildFrequencyToggle(colorScheme),
 
+            const SizedBox(height: 12),
+            
+            
+
             if (_frequency == HabitFrequency.specificDays) ...[
               const SizedBox(height: 16),
               _buildDaySelector(colorScheme),
@@ -257,9 +267,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               const SizedBox(height: 16),
               _buildDateSelector(colorScheme),
             ],
-
-            const SizedBox(height: 32),
-
+            const SizedBox(height: 12),
             Text(
               "appearance_all_cap".tr(),
               style: textTheme.labelSmall?.copyWith(
@@ -268,7 +276,6 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               ),
             ),
             const SizedBox(height: 12),
-
             SizedBox(
               height: 60,
               child: ListView.separated(
@@ -319,8 +326,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
                 },
               ),
             ),
-
-            const SizedBox(height: 24),
+            const SizedBox(height: 12),
 
             GridView.builder(
               shrinkWrap: true,
@@ -367,7 +373,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
                 );
               },
             ),
-            const SizedBox(height: 50),
+            const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -420,11 +426,11 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
     final isSelected = _frequency == val;
     return Expanded(
       child: GestureDetector(
-          onTap: () {
+        onTap: () {
           if (_frequency != val) {
             setState(() {
               _frequency = val;
-              _selectedDays.clear(); 
+              _selectedDays.clear();
             });
           }
         },
@@ -433,7 +439,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
           duration: const Duration(milliseconds: 200),
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.transparent,
+            color: isSelected ? colorScheme.primary : colorScheme.surface, 
             borderRadius: BorderRadius.circular(10),
           ),
           alignment: Alignment.center,
@@ -443,8 +449,9 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
               fontWeight: FontWeight.w600,
               // Selected: White | Unselected: Theme Text Color
               color: isSelected
-                  ? Colors.white
+                  ? colorScheme.onPrimary
                   : colorScheme.onSurface.withValues(alpha: 0.7),
+              fontSize: 14,
             ),
           ),
         ),
@@ -510,7 +517,7 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
           showCheckmark: false,
           selectedColor: AppColors.secondary,
           backgroundColor: colorScheme.surface,
-           
+
           labelStyle: TextStyle(
             color: isSelected ? Colors.white : colorScheme.onSurface,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -529,6 +536,93 @@ class _AddHabitPageState extends ConsumerState<AddHabitPage> {
           },
         );
       }),
+    );
+  }
+
+  Future<void> _pickStartDate() async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: _startDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(
+            context,
+          ).copyWith(colorScheme: Theme.of(context).colorScheme),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null && picked != _startDate) {
+      setState(() {
+        _startDate = picked;
+      });
+    }
+  }
+
+  Widget _buildStartDatePicker(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "start_date".tr().toUpperCase(),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface,
+              letterSpacing: 1.2,
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
+        GestureDetector(
+          onTap: _pickStartDate,
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(
+                color: Theme.of(
+                  context,
+                ).colorScheme.onPrimary,
+              ),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 16,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimary
+                ),
+                const SizedBox(width: 16),
+                Text(
+                  DateFormat.yMMMd(
+                    context.locale.toString(),
+                  ).format(_startDate),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                const Spacer(),
+                Icon(
+                  Icons.chevron_right_rounded,
+                  size: 16,
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.onPrimary,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

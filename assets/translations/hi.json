@@ -192,6 +192,7 @@
   "go_to_home_page": "होम पेज पर जाएं",
   "please_enter_habit_name": "कृपया अपनी आदत के लिए एक नाम दर्ज करें।",
   "specific_dates": "विशिष्ट तिथियां",
-  "edit_name": "नाम संपादित करें"
+  "edit_name": "नाम संपादित करें",
+  "start_date": "प्रारंभ तिथि"
 
 }

@@ -45,8 +45,10 @@ class _JournalPageState extends ConsumerState<JournalPage> {
   HabitState get habitState => ref.watch(habitNotifierProvider);
 
   DateTime get selectedDate => ref.watch(selectedDateProvider);
+
   void _changeDate(int days) {
     final currentDate = ref.read(selectedDateProvider);
+    
     final newDate = currentDate.add(Duration(days: days));
 
     ref.read(selectedDateProvider.notifier).state = newDate;

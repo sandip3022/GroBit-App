@@ -64,6 +64,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   Future<void> _finishOnboarding() async {
+    final now = DateTime.now();
+    final todayMidnight = DateTime(now.year, now.month, now.day);
     for (var habitData in _starterHabits) {
       if (_selectedHabits.contains(habitData['title'])) {
         final habit = HabitEntity(
@@ -74,11 +76,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           completedDates: [],
           frequency: HabitFrequency.daily,
           targetDays: [],
-          createdAt: DateTime.now(),
+          createdAt: todayMidnight,
         );
         ref
             .read(habitNotifierProvider.notifier)
-            .addHabit(habit, DateTime.now());
+            .addHabit(habit, todayMidnight);
       }
     }
 
