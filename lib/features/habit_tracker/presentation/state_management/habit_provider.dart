@@ -38,7 +38,7 @@ class HabitNotifier extends StateNotifier<HabitState> {
        super(HabitState([]));
 
   void toggle(HabitEntity habit, DateTime date) async {
-    await _toggleUseCase.call(habit, date); // Toggle for the SPECIFIC date
+    await _toggleUseCase.call(habit, date); 
     loadHabits(date); // Reload that date's data
   }
 
@@ -59,33 +59,29 @@ class HabitNotifier extends StateNotifier<HabitState> {
 
   Future<void> importHabits(List<HabitEntity> importedHabits) async {
     for (var habit in importedHabits) {
-      // Add each imported habit to the local Hive database
       await _createUseCase.call(habit);
     }
 
-    // Refresh the UI to show the newly imported data
     await loadHabits(DateTime.now());
   }
 
-  /// 1. RESET: Keeps habits, but clears all completion history
   Future<void> resetAllProgress() async {
     final currentHabits = state.habits;
     for (var habit in currentHabits) {
-      // Create a copy with empty history
       final resetHabit = HabitEntity(
         id: habit.id,
         title: habit.title,
         iconCode: habit.iconCode,
         colorValue: habit.colorValue,
-        completedDates: [], // CLEARED
+        completedDates: [], 
         frequency: habit.frequency,
         targetDays: habit.targetDays,
         createdAt:
-            DateTime.now(), 
+            DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day),
       );
       await _updateUseCase.call(resetHabit);
     }
-    loadHabits(DateTime.now());
+    loadHabits(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
   }
 
   Future<void> deleteAllData() async {
@@ -102,39 +98,31 @@ class HabitNotifier extends StateNotifier<HabitState> {
       newIndex -= 1;
     }
 
-    // Swap the items in memory
     final habit = currentHabits.removeAt(oldIndex);
     currentHabits.insert(newIndex, habit);
 
-    // Immediately update UI state for smooth animation
     state = HabitState(currentHabits);
 
-    // Save the new order of IDs to the settings box
     final orderIds = currentHabits.map((h) => h.id).toList();
     final settingsBox = Hive.box('settings');
     await settingsBox.put('habitOrder', orderIds);
   }
 
-  /// UPDATE YOUR EXISTING LOAD METHOD to sort by the saved order
   Future<void> loadHabits(DateTime selectedDate) async {
-    // 1. Fetch habits from your UseCase/Hive as usual
     List<HabitEntity> fetchedHabits = await _getHabitsUseCase.call(
       selectedDate,
     );
 
-    // 2. Retrieve custom order from Settings
     final settingsBox = Hive.box('settings');
     final List<dynamic>? savedOrderDyn = settingsBox.get('habitOrder');
 
     if (savedOrderDyn != null) {
       final savedOrder = savedOrderDyn.cast<String>();
 
-      // Sort fetched habits based on the saved ID list
       fetchedHabits.sort((a, b) {
         int indexA = savedOrder.indexOf(a.id);
         int indexB = savedOrder.indexOf(b.id);
 
-        // If a new habit isn't in the list yet, put it at the bottom
         if (indexA == -1) return 1;
         if (indexB == -1) return -1;
 
@@ -142,7 +130,6 @@ class HabitNotifier extends StateNotifier<HabitState> {
       });
     }
 
-    // 3. Update state
     state = HabitState(fetchedHabits);
   }
 }
