@@ -87,6 +87,8 @@ class HabitNotifier extends StateNotifier<HabitState> {
   Future<void> deleteAllData() async {
     await Hive.box<HabitModel>('habits').clear();
     await Hive.box('settings').clear();
+    final settingsBox = Hive.box('settings');
+    settingsBox.put('onboardingCompleted', true);
 
     state = HabitState([]);
   }

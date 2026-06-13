@@ -18,11 +18,8 @@ class ProgressPage extends ConsumerWidget {
     final box = Hive.box<HabitModel>('habits');
     final allHabitEntities = box.values.map((model) => model.toEntity()).toList();
     final stats = ProgressCalculator.calculate(allHabitEntities);
-
-    // 1. Get Theme Data
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    // Helper color for labels
     final labelColor = colorScheme.onSurface.withValues(alpha: 0.6);
 
     return Scaffold(
@@ -71,7 +68,6 @@ class ProgressPage extends ConsumerWidget {
 
             const SizedBox(height: 24),
 
-            // ROW 2: AVG COMPLETION RATE (Keep Primary Color background, it looks good in both)
             Semantics(
               label: "average_completion_rate".tr(
                 args: [(stats.avgCompletionRate * 100).toStringAsFixed(1)],
@@ -128,7 +124,6 @@ class ProgressPage extends ConsumerWidget {
 
             const SizedBox(height: 32),
 
-            // ROW 3: BAR CHART
             Text(
               "consistency_trend".tr(),
               style: textTheme.labelSmall?.copyWith(

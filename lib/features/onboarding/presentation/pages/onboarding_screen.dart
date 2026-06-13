@@ -310,7 +310,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                       children: [
                         Icon(
                           Icons.done_sharp,
-                          size: 16,
+                          size: 12,
                           color: colorScheme.onPrimary,
                         ),
                         const SizedBox(width: 20),
@@ -318,10 +318,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                           "backup_file_imported".tr(),
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
-                                fontSize: 16,
+                                fontSize: 12,
                                 color: colorScheme.onPrimary,
                                 fontWeight: FontWeight.w600,
                               ),
+                            maxLines: 2,
+                            overflow: TextOverflow.fade,
                         ),
                       ],
                     ),
